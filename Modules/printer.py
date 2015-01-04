@@ -9,6 +9,7 @@ import logging
 import pdfkit
 
 # DEVELOPMENT
+from Modules import helper
 
 # ============== IMPORT CLASSES
 from Classes.response import Success
@@ -30,9 +31,14 @@ def pdf(params):
 		# Get params:
 		transaction_id = params['transactionId']
 		url = 'https://corebook.me:3030/cfdi?transactionId='+transaction_id;
-		pdf = '/tmp/'+transaction_id+'.pdf'
+		pdf = '/tmp/pdf/'+transaction_id+'.pdf'
 		logger.info(url)
+		if helper.transaction_is_stored_in_path('/tmp/pdf/',transaction_id) == True:
+			logger.info("Deleted File")
+			helper.remove_file('/tmp/pdf/'+transaction_id+'.pdf')
+		
 		# pdfkit.from_url(url,pdf)
+		# process = subprocess.Popen(['wkhtmltopdf','--page-size','Letter',url,pdf])
 		process = subprocess.Popen(['wkhtmltopdf','--page-size','Letter',url,pdf])
 		retcode = process.wait()
 		response = Success(transaction_id+'.pdf');
