@@ -3,6 +3,7 @@
 # NATIVE
 import sys
 import subprocess
+import os
 
 # EXTERNAL
 import logging
@@ -10,6 +11,7 @@ import pdfkit
 
 # DEVELOPMENT
 from Modules import helper
+from Modules import constants as K
 
 # ============== IMPORT CLASSES
 from Classes.response import Success
@@ -31,17 +33,27 @@ def pdf(params):
 		# Get params:
 		transaction_id = params['transactionId']
 		url = 'https://corebook.me:3030/cfdi?transactionId='+transaction_id;
-		pdf = '/tmp/pdf/'+transaction_id+'.pdf'
+		pdf = K.PDF_STORAGE +transaction_id+'.pdf'
+		
+		logger.info(pdf)	
 		logger.info(url)
-		if helper.transaction_is_stored_in_path('/tmp/pdf/',transaction_id) == True:
+
+		if helper.transaction_is_stored_in_path(K.PDF_STORAGE,transaction_id) == True:
 			logger.info("Deleted File")
-			helper.remove_file('/tmp/pdf/'+transaction_id+'.pdf')
+			helper.remove_file(K.PDF_STORAGE+transaction_id+'.pdf')
 		
 		# pdfkit.from_url(url,pdf)
 		# process = subprocess.Popen(['wkhtmltopdf','--page-size','Letter',url,pdf])
 		process = subprocess.Popen(['wkhtmltopdf','--page-size','Letter',url,pdf])
+		
 		retcode = process.wait()
-		response = Success(transaction_id+'.pdf');
+		
+		if(retcode == 1):
+			if helper.transaction_is_stored_in_path(K.PDF_STORAGE,"E" + transaction_id) != True:
+				os.rename(pdf, K.PDF_STORAGE + "E" + transaction_id+'.pdf')
+			pdf = K.PDF_STORAGE + "E" + transaction_id+'.pdf'
+
+		response = Success(pdf);
 	except:
 		# Extract Error
 		e = str(sys.exc_info()[0]) + ' ' + str(sys.exc_info()[1])

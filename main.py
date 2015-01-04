@@ -14,6 +14,7 @@ from flask import send_from_directory
 
 # DEVELOPMENT
 from Modules import log
+from Modules import constants as K
 from api import instructions as API
 
 # ============== IMPORT CLASSES
@@ -100,7 +101,7 @@ def api_get(instruction):
 			# response = result.get_response()
 			response = result.content
 			logger.info(response)
-			response = send_from_directory('/tmp/pdf/',response, as_attachment=True)
+			response = send_file(response, as_attachment=True)
 		else:
 			# Send to LOGS
 			logger.info('Bad request')

@@ -44,3 +44,4 @@ UNAUTHORIZED = 'Unauthorized'
 ONE_MONTHS_PERIOD = 1;
 TWO_MONTHS_PERIOD = 2;
 
+PDF_STORAGE = '/Users/miguelbautista/Desktop/pdf/'
