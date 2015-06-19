@@ -32,7 +32,11 @@ def pdf(params):
 	try:
 		# Get params:
 		transaction_id = params['transactionId']
+
+		# url = 'https://wallstreetmx.cloudapp.net:3030/cfdi?transactionId='+transaction_id;
+
 		url = 'https://corebook.me/cfdi?transactionId='+transaction_id;
+		
 		pdf = K.PDF_STORAGE +transaction_id+'.pdf'
 		
 		logger.info(pdf)	
